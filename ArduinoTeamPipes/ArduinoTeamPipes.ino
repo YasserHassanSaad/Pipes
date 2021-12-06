@@ -33,6 +33,11 @@ void setup() {
   pinMode(trigPin, OUTPUT); // Sets the trigPin as an Output
   pinMode(echoPin, INPUT); // Sets the echoPin as an Input
   pinMode(led,OUTPUT);
+  pinMode(D2, OUTPUT);   // inputs for motor 1
+  pinMode(D6,OUTPUT);
+  pinMode(D7,OUTPUT);    // inputs for motor 2 
+  pinMode(D8,OUTPUT);
+
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   Serial.print("Connecting to Wi-Fi");
   while (WiFi.status() != WL_CONNECTED)
@@ -47,6 +52,34 @@ void setup() {
 
   Firebase.begin(FIREBASE_HOST, FIREBASE_AUTH);
   Firebase.reconnectWiFi(true);
+}
+
+void Pipe1Open() 
+{
+  digitalWrite(D2,HIGH);
+  digitalWrite(D6,LOW);
+  delay(200);
+}
+
+void Pipe1Close() 
+{
+  digitalWrite(D2,LOW);
+  digitalWrite(D6,HIGH);
+  delay(200);
+}
+
+void Pipe2Open() 
+{
+  digitalWrite(D7,HIGH);
+  digitalWrite(D8,LOW);
+  delay(200);
+}
+
+void Pipe2Close() 
+{
+  digitalWrite(D7,LOW);
+  digitalWrite(D8,HIGH);
+  delay(200);
 }
 
 void loop() {
@@ -97,19 +130,19 @@ void loop() {
 
   if (Firebase.getString(pipe1Data, "/FirebaseIOT/Pipe1")){
     if (pipe1Data.stringData() == "1") {
-    digitalWrite(pipe1Motor, HIGH);
+      Pipe1Open; 
     }
-  else if (pipe1Data.stringData() == "0"){
-    digitalWrite(pipe1Motor, LOW);
+    else if (pipe1Data.stringData() == "0"){
+      Pipe1Close
     }
   }
 
   if (Firebase.getString(pipe2Data, "/FirebaseIOT/Pipe2")){
     if (pipe2Data.stringData() == "1") {
-    digitalWrite(pipe2Data, HIGH);
+      Pipe2Open; 
     }
-  else if (pipe2Data.stringData() == "0"){
-    digitalWrite(pipe2Data, LOW);
+    else if (pipe2Data.stringData() == "0"){
+      Pipe2Close
     }
   }
 
